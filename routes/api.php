@@ -16,14 +16,9 @@ use App\Http\Controllers\RoomController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::group(['prefix' => 'property'], function () {
     Route::post('/', [PropertyController::class, 'store']);
     Route::get('/', [PropertyController::class, 'index']);
-    Route::get('{property}', [PropertyController::class, 'show']);
     Route::put('{property}', [PropertyController::class, 'update']);
     Route::delete('{property}', [PropertyController::class, 'destroy']);
 });

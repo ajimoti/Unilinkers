@@ -20,6 +20,7 @@ class RoomResource extends JsonResource
             'name' => $this->name,
             'size' => $this->size,
             'size_unit' => $this->size_unit,
+            'human_readable_size' => $this->human_readable_size,
             'property' => new PropertyResource($this->whenLoaded('property')),
         ];
     }

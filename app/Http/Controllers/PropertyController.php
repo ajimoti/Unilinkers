@@ -55,14 +55,6 @@ class PropertyController extends Controller
     }
 
     /**
-     * Show the specified resource in storage.
-     */
-    public function show(Property $property)
-    {
-        return json('Property detail', new PropertyResource($property));
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdatePropertyRequest $request, Property $property)
