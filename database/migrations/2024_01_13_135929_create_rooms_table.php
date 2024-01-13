@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('property_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('size');
+            $table->integer('size');
             $table->string('size_unit')->comment('the measurable unit, e.g square feet, square meters, etc.');
             $table->timestamps();
         });

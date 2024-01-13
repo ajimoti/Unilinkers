@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\SizeUnit;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRoomRequest extends FormRequest
@@ -22,7 +23,10 @@ class StoreRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'property_id' => ['required', 'integer', 'exists:properties,id'],
+            'name' => ['required', 'string', 'max:100', 'min:2'],
+            'size' => ['required', 'integer', 'min:1'],
+            'size_unit' => ['required', 'string', 'in:' . implode(',', SizeUnit::values())],
         ];
     }
 }

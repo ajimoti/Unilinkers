@@ -38,7 +38,7 @@ class PropertyController extends Controller
     {
         $request->validated();
 
-        $properties = $this->property->paginate($request->per_page ?? $this->perPage);
+        $properties = $this->property->with('rooms')->paginate($request->per_page ?? $this->perPage);
 
         return json('Properties retrieved', new PropertyCollection($properties));
     }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRoomRequest extends FormRequest
+class UpdateRoomRequest extends StoreRoomRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,8 +21,6 @@ class UpdateRoomRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return parent::rules();
     }
 }

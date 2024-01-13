@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\RoomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,11 @@ Route::group(['prefix' => 'property'], function () {
     Route::get('{property}', [PropertyController::class, 'show']);
     Route::put('{property}', [PropertyController::class, 'update']);
     Route::delete('{property}', [PropertyController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'room'], function () {
+    Route::post('/', [RoomController::class, 'store']);
+    Route::get('{property}', [RoomController::class, 'index']);
+    Route::put('{room}', [RoomController::class, 'update']);
+    Route::delete('{room}', [RoomController::class, 'destroy']);
 });

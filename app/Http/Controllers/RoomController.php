@@ -4,24 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRoomRequest;
 use App\Http\Requests\UpdateRoomRequest;
+use App\Http\Resources\RoomResource;
 use App\Models\Room;
+use App\Models\Property;
 
 class RoomController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Property model.
      */
-    public function index()
+    public Property $property;
+
+    /**
+     * Number of items per page.
+     */
+    public int $perPage;
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(Property $property,int $perPage = null)
     {
-        //
+        $this->property = $property;
+        $this->perPage = $perPage ?? config('response.per_page');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      */
-    public function create()
+    public function index(Property $property)
     {
-        //
+        return json('Rooms retrieved', RoomResource::collection($property->rooms));
     }
 
     /**
@@ -29,23 +42,13 @@ class RoomController extends Controller
      */
     public function store(StoreRoomRequest $request)
     {
-        //
-    }
+        $validated = $request->validated();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Room $room)
-    {
-        //
-    }
+        $property = $this->property->findOrFail($request->property_id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Room $room)
-    {
-        //
+        $room = $property->rooms()->firstOrCreate($validated);
+
+        return json('Room created', new RoomResource($room), 201);
     }
 
     /**
@@ -53,7 +56,9 @@ class RoomController extends Controller
      */
     public function update(UpdateRoomRequest $request, Room $room)
     {
-        //
+        $room->update($request->validated());
+
+        return json('Room updated', new RoomResource($room));
     }
 
     /**
@@ -61,6 +66,8 @@ class RoomController extends Controller
      */
     public function destroy(Room $room)
     {
-        //
+        $room->delete();
+
+        return json('Room deleted');
     }
 }
