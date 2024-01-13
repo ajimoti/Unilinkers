@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Models\Property;
 
 class PropertyCollection extends ResourceCollection
 {
@@ -15,17 +16,9 @@ class PropertyCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         // @see https://medium.com/@miladev95/paginating-laravel-api-resources-6d1d98c3adbb
-        // return [
-        //     'data' => $this->collection->transform(function (Property $property) {
-        //         return new PropertyResource($property);
-        //     }),
-        //     'meta' => [
-        //         'total_properties' => $this->collection->count(),
-        //     ],
-        // ];
 
         return [
-            $this->collection,
+            'properties' => $this->collection,
             'pagination' => [
                 'total' => $this->total(),
                 'count' => $this->count(),

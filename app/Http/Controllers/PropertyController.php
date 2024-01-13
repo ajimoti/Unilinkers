@@ -13,12 +13,21 @@ use App\Http\Resources\PropertyCollection;
 class PropertyController extends Controller
 {
     /**
+     * Property model.
+     */
+    public Property $property;
+
+    /**
+     * Number of items per page.
+     */
+    public int $perPage;
+
+    /**
      * Create a new controller instance.
      */
-    public function __construct(
-        public Property $property,
-        public int $perPage,
-    ){
+    public function __construct(Property $property, int $perPage = null)
+    {
+        $this->property = $property;
         $this->perPage = $perPage ?? config('response.per_page');
     }
 
@@ -27,15 +36,11 @@ class PropertyController extends Controller
      */
     public function index(GetPropertiesRequest $request): JsonResponse
     {
-        try {
-            $request->validated();
+        $request->validated();
 
-            $properties = $this->property->paginate($request->per_page ?? $this->perPage);
+        $properties = $this->property->paginate($request->per_page ?? $this->perPage);
 
-            return json('Properties retrieved', new PropertyCollection($properties));
-        } catch (\Throwable $th) {
-            return json_message('Error retrieving properties', 500);
-        }
+        return json('Properties retrieved', new PropertyCollection($properties));
     }
 
     /**
@@ -43,14 +48,10 @@ class PropertyController extends Controller
      */
     public function store(StorePropertyRequest $request): JsonResponse
     {
-        try {
-            // Using firstOrCreate to avoid duplicate entries
-            $property = $this->property->firstOrCreate($request->validated());
+        // Using firstOrCreate to avoid duplicate entries
+        $property = $this->property->firstOrCreate($request->validated());
 
-            return json('Property created', new PropertyResource($property), 201);
-        } catch (\Throwable $th) {
-            return json_message('Error creating property', 500);
-        }
+        return json('Property created', new PropertyResource($property), 201);
     }
 
     /**
@@ -58,7 +59,7 @@ class PropertyController extends Controller
      */
     public function show(Property $property)
     {
-        return json('Property updated', new PropertyResource($property));
+        return json('Property detail', new PropertyResource($property));
     }
 
     /**
@@ -66,13 +67,9 @@ class PropertyController extends Controller
      */
     public function update(UpdatePropertyRequest $request, Property $property)
     {
-        try {
-            $property->update($request->validated());
+        $property->update($request->validated());
 
-            return json('Property updated', new PropertyResource($property));
-        } catch (\Throwable $th) {
-            return json_message('Error updating property', 500);
-        }
+        return json('Property updated', new PropertyResource($property));
     }
 
     /**
@@ -80,12 +77,8 @@ class PropertyController extends Controller
      */
     public function destroy(Property $property)
     {
-        try {
-            $property->delete();
+        $property->delete();
 
-            return json('Property deleted');
-        } catch (\Throwable $th) {
-            return json_message('Error deleting property', 500);
-        }
+        return json('Property deleted');
     }
 }
