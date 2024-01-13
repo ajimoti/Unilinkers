@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePropertyRequest extends StorePropertyRequest
+class GetPropertiesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -21,6 +21,8 @@ class UpdatePropertyRequest extends StorePropertyRequest
      */
     public function rules(): array
     {
-        return parent::rules();
+        return [
+            'per_page' => 'nullable|integer|min:1|max:100',
+        ];
     }
 }

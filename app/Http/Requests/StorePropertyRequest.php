@@ -11,7 +11,7 @@ class StorePropertyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class StorePropertyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:100', 'min:2'],
+            'address' => ['required', 'string', 'max:200', 'min:3'],
         ];
     }
 }
