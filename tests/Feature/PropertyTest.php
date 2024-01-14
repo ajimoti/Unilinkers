@@ -13,7 +13,9 @@ class PropertyTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * A basic test example.
+     * Returns correct validation errors when creating a property.
+     *
+     * @return void
      */
     public function test_returns_correct_validation_errors_when_creating_a_property(): void
     {
@@ -34,6 +36,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns a successful response when creating a property.
+     *
+     * @return void
+     */
     public function test_returns_a_successful_response_when_creating_a_property(): void
     {
         $response = $this->postJson('/api/property', [
@@ -52,6 +59,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns successful response when the listing endpoint is called and there are no properties.
+     *
+     * @return void
+     */
     public function test_returns_a_successful_response_when_the_listing_endpoint_is_called_and_there_are_no_properties(): void
     {
         $response = $this->getJson('/api/property');
@@ -64,6 +76,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns successful response when the listing endpoint is called and there are properties.
+     *
+     * @return void
+     */
     public function test_returns_a_successful_response_when_the_listing_endpoint_is_called_and_there_are_properties(): void
     {
         $property = Property::factory()->hasRooms(1, [
@@ -115,6 +132,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns correct number of rooms object when the listing endpoint is called.
+     *
+     * @return void
+     */
     public function test_returns_correct_number_of_rooms_object_when_the_listing_endpoint_is_called(): void
     {
         Property::factory()->hasRooms(17)->create();
@@ -127,6 +149,11 @@ class PropertyTest extends TestCase
         );
     }
 
+    /**
+     * Update endpoint returns 404 when a property is not found.
+     *
+     * @return void
+     */
     public function test_update_endpoint_returns_404_when_a_property_is_not_found(): void
     {
         $response = $this->putJson('/api/property/1444', []);
@@ -139,6 +166,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Update endpoint returns 422 when validation fails.
+     *
+     * @return void
+     */
     public function test_update_endpoint_returns_422_when_validation_fails(): void
     {
         $property = Property::factory()->create();
@@ -160,6 +192,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Can successfully update a property.
+     *
+     * @return void
+     */
     public function test_can_successfully_update_a_property(): void
     {
         $property = Property::factory()->create();
@@ -180,6 +217,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Delete endpoint returns 404 when a property is not found.
+     *
+     * @return void
+     */
     public function test_delete_endpoint_returns_404_when_a_property_is_not_found(): void
     {
         $response = $this->deleteJson('/api/property/1444');
@@ -192,6 +234,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Can successfully delete a property.
+     *
+     * @return void
+     */
     public function test_can_successfully_delete_a_property(): void
     {
         $property = Property::factory()->create();
@@ -206,6 +253,11 @@ class PropertyTest extends TestCase
             ]);
     }
 
+    /**
+     * Can successfully delete a property and its rooms.
+     *
+     * @return void
+     */
     public function test_can_successfully_delete_a_property_and_its_rooms(): void
     {
         $property = Property::factory()->hasRooms(1)->create();

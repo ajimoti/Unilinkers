@@ -12,6 +12,11 @@ class RoomTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * Returns correct validation errors when creating a room.
+     *
+     * @return void
+     */
     public function test_returns_correct_validation_errors_when_creating_a_room(): void
     {
         $response = $this->postJson('/api/room', []);
@@ -37,6 +42,11 @@ class RoomTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns a successful response when creating a room.
+     *
+     * @return void
+     */
     public function test_returns_a_successful_response_when_creating_a_room(): void
     {
         $property = Property::factory()->create();
@@ -61,6 +71,11 @@ class RoomTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns all rooms for a property.
+     *
+     * @return void
+     */
     public function test_returns_all_rooms_for_a_property(): void
     {
         $property = Property::factory()->hasRooms(1, [
@@ -86,6 +101,10 @@ class RoomTest extends TestCase
             ]);
     }
 
+    /*  Returns correct number of rooms for a property.
+     *
+     * @return void
+     */
     public function test_returns_correct_number_of_rooms_for_a_property(): void
     {
         $property = Property::factory()->hasRooms(20)->create();
@@ -98,6 +117,11 @@ class RoomTest extends TestCase
             );
     }
 
+    /**
+     * Successfully updates a room.
+     *
+     * @return void
+     */
     public function test_successfully_updates_a_room(): void
     {
         $property = Property::factory()->hasRooms(1, [
@@ -131,6 +155,11 @@ class RoomTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns a 404 error when updating a room that does not exist.
+     *
+     * @return void
+     */
     public function test_returns_a_404_error_when_updating_a_room_that_does_not_exist(): void
     {
         $response = $this->putJson("/api/room/122", [
@@ -148,6 +177,11 @@ class RoomTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns validation errors on update endpoint.
+     *
+     * @return void
+     */
     public function test_validation_errors_on_update_endpoint(): void
     {
         $property = Property::factory()->hasRooms(1, [
@@ -180,6 +214,11 @@ class RoomTest extends TestCase
             ]);
     }
 
+    /**
+     * Returns a 404 error when deleting a room that does not exist.
+     *
+     * @return void
+     */
     public function test_returns_a_404_error_when_deleting_a_room_that_does_not_exist(): void
     {
         $response = $this->deleteJson("/api/room/122");
@@ -192,6 +231,11 @@ class RoomTest extends TestCase
             ]);
     }
 
+    /**
+     * Successfully deletes a room.
+     *
+     * @return void
+     */
     public function test_successfully_deletes_a_room(): void
     {
         $property = Property::factory()->hasRooms(1, [
