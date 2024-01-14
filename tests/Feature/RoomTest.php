@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Property;
+use App\Models\Room;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 class RoomTest extends TestCase
@@ -40,6 +41,8 @@ class RoomTest extends TestCase
                     ]
                 ]
             ]);
+
+        $this->assertDatabaseCount('rooms', 0);
     }
 
     /**
@@ -69,6 +72,8 @@ class RoomTest extends TestCase
                     "size_unit" => "sqm"
                 ]
             ]);
+
+        $this->assertDatabaseCount('rooms', 1);
     }
 
     /**
@@ -130,6 +135,7 @@ class RoomTest extends TestCase
             'size_unit' => 'sqm'
         ])->create();
 
+        // Create a second property to test that the room  property_id can be updated
         $property2 = Property::factory()->create();
 
         $roomId = $property->rooms->first()->id;
@@ -153,6 +159,12 @@ class RoomTest extends TestCase
                     "human_readable_size"=> "200 sqm"
                 ]
             ]);
+
+        $updatedRoom = Room::find($roomId);
+        $this->assertEquals($property2->id, $updatedRoom->property_id);
+        $this->assertEquals('My Updated Room', $updatedRoom->name);
+        $this->assertEquals(200, $updatedRoom->size);
+        $this->assertEquals('sqm', $updatedRoom->size_unit);
     }
 
     /**
@@ -162,6 +174,7 @@ class RoomTest extends TestCase
      */
     public function test_returns_a_404_error_when_updating_a_room_that_does_not_exist(): void
     {
+        $this->assertDatabaseCount('rooms', 0);
         $response = $this->putJson("/api/room/122", [
             'property_id' => 1,
             'name' => 'My Updated Room',
@@ -221,6 +234,7 @@ class RoomTest extends TestCase
      */
     public function test_returns_a_404_error_when_deleting_a_room_that_does_not_exist(): void
     {
+        $this->assertDatabaseCount('rooms', 0);
         $response = $this->deleteJson("/api/room/122");
 
         $response->assertStatus(404)
@@ -253,5 +267,7 @@ class RoomTest extends TestCase
                 "message" => "Room deleted",
                 "data" => []
             ]);
+
+        $this->assertDatabaseCount('rooms', 0);
     }
 }

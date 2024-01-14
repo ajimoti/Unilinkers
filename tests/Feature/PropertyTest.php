@@ -34,6 +34,8 @@ class PropertyTest extends TestCase
                     ]
                 ]
             ]);
+
+        $this->assertDatabaseCount('properties', 0);
     }
 
     /**
@@ -57,6 +59,12 @@ class PropertyTest extends TestCase
                     "address" => "My Address"
                 ]
             ]);
+
+        $this->assertDatabaseCount('properties', 1);
+        $this->assertDatabaseHas('properties', [
+            'name' => 'My Property',
+            'address' => 'My Address'
+        ]);
     }
 
     /**
@@ -74,6 +82,8 @@ class PropertyTest extends TestCase
                 "message" => "Properties retrieved",
                 "data" => []
             ]);
+
+        $this->assertDatabaseCount('properties', 0);
     }
 
     /**
@@ -130,6 +140,19 @@ class PropertyTest extends TestCase
                     ]
                 ]
             ]);
+
+        $this->assertDatabaseCount('properties', 1);
+        $this->assertDatabaseCount('rooms', 1);
+        $this->assertDatabaseHas('properties', [
+            'name' => 'My Property',
+            'address' => 'My Address'
+        ]);
+        $this->assertDatabaseHas('rooms', [
+            'property_id' => $property->id,
+            'name' => 'My Room',
+            'size' => 100,
+            'size_unit' => SizeUnit::SQUARE_METERS
+        ]);
     }
 
     /**
@@ -140,6 +163,10 @@ class PropertyTest extends TestCase
     public function test_returns_correct_number_of_rooms_object_when_the_listing_endpoint_is_called(): void
     {
         Property::factory()->hasRooms(17)->create();
+
+        // Confirm that there are 17 rooms and 1 property in the database
+        $this->assertDatabaseCount('properties', 1);
+        $this->assertDatabaseCount('rooms', 17);
 
         $response = $this->getJson('/api/property');
         $response->assertJson(fn (AssertableJson $json) =>
@@ -156,6 +183,7 @@ class PropertyTest extends TestCase
      */
     public function test_update_endpoint_returns_404_when_a_property_is_not_found(): void
     {
+        $this->assertDatabaseCount('properties', 0);
         $response = $this->putJson('/api/property/1444', []);
 
         $response->assertStatus(404)
@@ -190,6 +218,10 @@ class PropertyTest extends TestCase
                     ]
                 ]
             ]);
+
+        $dbProperty = Property::find($property->id);
+        $this->assertEquals($dbProperty->name, $property->name);
+        $this->assertEquals($dbProperty->address, $property->address);
     }
 
     /**
@@ -215,6 +247,10 @@ class PropertyTest extends TestCase
                     "address" => "My Address"
                 ]
             ]);
+
+        $dbProperty = Property::find($property->id);
+        $this->assertEquals($dbProperty->name, 'My Property');
+        $this->assertEquals($dbProperty->address, 'My Address');
     }
 
     /**
@@ -224,6 +260,7 @@ class PropertyTest extends TestCase
      */
     public function test_delete_endpoint_returns_404_when_a_property_is_not_found(): void
     {
+        $this->assertDatabaseCount('properties', 0);
         $response = $this->deleteJson('/api/property/1444');
 
         $response->assertStatus(404)
@@ -251,6 +288,8 @@ class PropertyTest extends TestCase
                 "message" => "Property deleted",
                 "data" => []
             ]);
+
+        $this->assertDatabaseCount('properties', 0);
     }
 
     /**
@@ -260,7 +299,9 @@ class PropertyTest extends TestCase
      */
     public function test_can_successfully_delete_a_property_and_its_rooms(): void
     {
-        $property = Property::factory()->hasRooms(1)->create();
+        $property = Property::factory()->hasRooms(3)->create();
+        $this->assertDatabaseCount('properties', 1);
+        $this->assertDatabaseCount('rooms', 3);
 
         $response = $this->deleteJson("/api/property/{$property->id}");
 
