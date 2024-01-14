@@ -14,6 +14,9 @@ sed -i '' "s/DB_DATABASE=.*/DB_DATABASE=${db_database}/" .env
 sed -i '' "s/DB_USERNAME=.*/DB_USERNAME=${db_username}/" .env
 sed -i '' "s/DB_PASSWORD=.*/DB_PASSWORD=${db_password}/" .env
 
+# Install composer dependencies
+composer install
+
 # Generate an application key
 php artisan key:generate
 
